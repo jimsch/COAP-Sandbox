@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoAP.Server.NET45", "CoAP.Example\CoAP.Server\CoAP.Server.NET45.csproj", "{05CC2E5E-B663-4560-844C-C8E52ED1C9D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoAP.Client.NET45", "CoAP.Example\CoAP.Client\CoAP.Client.NET45.csproj", "{30223FF5-4DCB-45B8-9B06-61EB9FBF9FA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoAP.TLS", "CoAP.TLS\CoAP.TLS.csproj", "{F420D643-30BC-4E8C-B69D-C6E8ED272A0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoAP.TLS.Test", "CoAP.TLS.Test\CoAP.TLS.Test.csproj", "{39ED5B69-5169-46AF-9714-F9BFCFE9AA98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coap.dev", "..\CoAP-CSharp\CoAP.NET\coap.dev.csproj", "{45DB1E45-4831-4E4A-BB1E-AE92EEA182E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crypto.Net45", "..\..\..\Bouncy-Castle\bc-csharp\crypto\crypto.Net45.csproj", "{45473847-8AF8-4BAF-B768-442C6875B8CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COSE.dev", "..\..\..\COSE\COSE-csharp\COSE\COSE.dev.csproj", "{D02F476F-BC2C-4D01-BEDE-EB8E79DD050E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05CC2E5E-B663-4560-844C-C8E52ED1C9D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05CC2E5E-B663-4560-844C-C8E52ED1C9D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05CC2E5E-B663-4560-844C-C8E52ED1C9D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05CC2E5E-B663-4560-844C-C8E52ED1C9D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30223FF5-4DCB-45B8-9B06-61EB9FBF9FA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30223FF5-4DCB-45B8-9B06-61EB9FBF9FA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30223FF5-4DCB-45B8-9B06-61EB9FBF9FA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30223FF5-4DCB-45B8-9B06-61EB9FBF9FA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F420D643-30BC-4E8C-B69D-C6E8ED272A0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F420D643-30BC-4E8C-B69D-C6E8ED272A0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F420D643-30BC-4E8C-B69D-C6E8ED272A0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F420D643-30BC-4E8C-B69D-C6E8ED272A0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39ED5B69-5169-46AF-9714-F9BFCFE9AA98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39ED5B69-5169-46AF-9714-F9BFCFE9AA98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39ED5B69-5169-46AF-9714-F9BFCFE9AA98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39ED5B69-5169-46AF-9714-F9BFCFE9AA98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45DB1E45-4831-4E4A-BB1E-AE92EEA182E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45DB1E45-4831-4E4A-BB1E-AE92EEA182E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45DB1E45-4831-4E4A-BB1E-AE92EEA182E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45DB1E45-4831-4E4A-BB1E-AE92EEA182E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45473847-8AF8-4BAF-B768-442C6875B8CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45473847-8AF8-4BAF-B768-442C6875B8CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45473847-8AF8-4BAF-B768-442C6875B8CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45473847-8AF8-4BAF-B768-442C6875B8CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D02F476F-BC2C-4D01-BEDE-EB8E79DD050E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D02F476F-BC2C-4D01-BEDE-EB8E79DD050E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D02F476F-BC2C-4D01-BEDE-EB8E79DD050E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D02F476F-BC2C-4D01-BEDE-EB8E79DD050E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

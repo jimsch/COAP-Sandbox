@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="CoAP.TLS\**" />
+    <EmbeddedResource Remove="CoAP.TLS\**" />
+    <None Remove="CoAP.TLS\**" />
+  </ItemGroup>
+
+</Project>
