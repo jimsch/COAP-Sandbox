@@ -86,7 +86,6 @@ namespace Com.AugustCellars.CoAP.TLS
 
             DtlsClientProtocol clientProtocol = new DtlsClientProtocol(new SecureRandom());
 
-//            _transport = new OurTransport(EndPoint);
             _transport.UDPChannel = udpChannel;
 
             DtlsTransport dtlsClient = clientProtocol.Connect(_client, _transport);
@@ -179,8 +178,9 @@ namespace Com.AugustCellars.CoAP.TLS
         private void FireDataReceived(Byte[] data, System.Net.EndPoint ep)
         {
             EventHandler<DataReceivedEventArgs> h = _dataReceived;
-            if (h != null)
+            if (h != null) {
                 h(this, new DataReceivedEventArgs(data, ep));
+            }
         }
 
         class OurTransport : DatagramTransport
@@ -207,14 +207,17 @@ namespace Com.AugustCellars.CoAP.TLS
 
             public int GetReceiveLimit()
             {
-                return 1100;
-                return _udpChannel.ReceiveBufferSize;
+                int limit = _udpChannel.ReceiveBufferSize;
+                if (limit <= 0) limit = 1149;
+                return limit;
             }
 
             public int GetSendLimit()
             {
-                return 1100;
-                return _udpChannel.SendBufferSize;
+                int limit = _udpChannel.SendBufferSize;
+                if (limit <= 0)
+                    limit = 1149;
+                return limit;
             }
 
             public int Receive(byte[] buf, int off, int len, int waitMillis)
