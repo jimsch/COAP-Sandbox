@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using Com.AugustCellars.CoAP.TLS;
@@ -133,9 +134,11 @@ namespace Com.AugustCellars.CoAP.Examples
 
 
                 }
-                request.EndPoint = ep;
-                ep.Start();
-        }
+                if (ep != null) {
+                    request.EndPoint = ep;
+                    ep.Start();
+                }
+            }
 
             // uncomment the next line if you want to specify a draft to use
             // request.EndPoint = CoAP.Net.EndPointManager.Draft13;

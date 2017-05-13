@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using System.Net;
-using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading;
@@ -22,18 +17,18 @@ using DataReceivedEventArgs = Com.AugustCellars.CoAP.Channel.DataReceivedEventAr
 
 namespace Com.AugustCellars.CoAP.TLS
 {
-    class DTLSSession
+    internal class DTLSSession
     {
         private DtlsClient _client;
         private readonly IPEndPoint _ipEndPoint;
         private DtlsTransport _dtlsClient;
         private readonly OurTransport _transport;
-        private OneKey _userKey;
-        private KeySet _userKeys;
-        private KeySet _serverKeys;
+        private readonly OneKey _userKey;
+        private readonly KeySet _userKeys;
+        private readonly KeySet _serverKeys;
 
         private readonly ConcurrentQueue<QueueItem> _queue = new ConcurrentQueue<QueueItem>();
-        private EventHandler<DataReceivedEventArgs> _dataReceived;
+        private readonly EventHandler<DataReceivedEventArgs> _dataReceived;
 
 
         public DTLSSession(IPEndPoint ipEndPoint, EventHandler<DataReceivedEventArgs> dataReceived, OneKey userKey)
@@ -171,11 +166,13 @@ namespace Com.AugustCellars.CoAP.TLS
         void StartListen()
         {
             byte[] buf = new byte[2000];
-            while (true) {
-                int size = _dtlsClient.Receive(buf, 0, buf.Length, -1);
-                byte[] buf2 = new byte[size];
-                Array.Copy(buf, buf2, size);
-                FireDataReceived(buf2, _ipEndPoint);
+            while (_dtlsClient != null) {
+                int size = _dtlsClient.Receive(buf, 0, buf.Length, 1000);
+                if (size >= 0) {
+                    byte[] buf2 = new byte[size];
+                    Array.Copy(buf, buf2, size);
+                    FireDataReceived(buf2, _ipEndPoint);
+                }
             }
         }
 
@@ -205,6 +202,7 @@ namespace Com.AugustCellars.CoAP.TLS
             public void Close()
             {
                 _udpChannel = null;
+                Monitor.PulseAll(_receivingQueue);
             }
 
             public int GetReceiveLimit()
@@ -224,8 +222,7 @@ namespace Com.AugustCellars.CoAP.TLS
                 lock (_receivingQueue) {
                     if (_receivingQueue.Count < 1) {
                         try {
-                          //  Monitor.Wait(_receivingQueue, waitMillis);
-                            Monitor.Wait(_receivingQueue);
+                          Monitor.Wait(_receivingQueue, waitMillis);
                         }
                         catch (ThreadInterruptedException) {
                             // TODO Keep waiting until full wait expired?
