@@ -16,31 +16,56 @@ namespace Com.AugustCellars.CoAP.TLS
     public class DTLSClientEndPoint : CoAPEndPoint
     {
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Instantiates a new DTLS endpoint with the specific channel and configuration
+        /// </summary>
+        /// <param name="userKey">Authentication information</param>
         public DTLSClientEndPoint(OneKey userKey) : this(userKey, 0, CoapConfig.Default)
         {
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Instantiates a new DTLS endpoint with the specific channel and configuration
+        /// </summary>
+        /// <param name="userKey">Authentication information</param>
+        /// <param name="config">Configuration info</param>
         public DTLSClientEndPoint(OneKey userKey, ICoapConfig config) : this(userKey, 0, config)
         {
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Instantiates a new DTLS endpoint with the specific channel and configuration
+        /// </summary>
+        /// <param name="userKey">Authentication information</param>
+        /// <param name="port">Client side port to use</param>
         public DTLSClientEndPoint(OneKey userKey, Int32 port) : this(new DTLSClientChannel(userKey, port), CoapConfig.Default)
         {
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Instantiates a new DTLS endpoint with the specific channel and configuration
+        /// </summary>
+        /// <param name="userKey">Authentication information</param>
+        /// <param name="port">Client side port to use</param>
+        /// <param name="config">Configuration info</param>
         public DTLSClientEndPoint(OneKey userKey, Int32 port, ICoapConfig config) : this (new DTLSClientChannel(userKey, port), config)
         { }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Instantiates a new DTLS endpoint with the specific channel and configuration
+        /// </summary>
+        /// <param name="userKey">Authentication information</param>
+        /// <param name="localEP">Client side endpoint to use</param>
         public DTLSClientEndPoint(OneKey userKey, System.Net.EndPoint localEP) : this(userKey, localEP, CoapConfig.Default)
         {
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Instantiates a new DTLS endpoint with the specific channel and configuration
+        /// </summary>
+        /// <param name="userKey">Authentication information</param>
+        /// <param name="localEP">Client side endpoint to use</param>
+        /// <param name="config">Configuration info</param>
         public DTLSClientEndPoint(OneKey userKey, System.Net.EndPoint localEP, ICoapConfig config) : this(new DTLSClientChannel(userKey, localEP), config)
         {
         }
@@ -52,6 +77,7 @@ namespace Com.AugustCellars.CoAP.TLS
         /// <param name="config">Configuration information for the transport</param>
         private DTLSClientEndPoint(DTLSClientChannel channel, ICoapConfig config) : base(channel, config)
         {
+            Stack.Remove("Reliability");
             MessageEncoder = UdpCoapMesageEncoder;
             MessageDecoder = UdpCoapMessageDecoder;
             EndpointSchema = "coaps";

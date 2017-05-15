@@ -88,7 +88,9 @@ namespace Com.AugustCellars.CoAP.TLS
 
             _transport.UDPChannel = udpChannel;
 
+            _listening = 1;
             DtlsTransport dtlsClient = clientProtocol.Connect(_client, _transport);
+            _listening = 0;
             _dtlsClient = dtlsClient;
 
             //  We are now in the world of a connected system -
@@ -105,8 +107,10 @@ namespace Com.AugustCellars.CoAP.TLS
   //          _transport = new OurTransport(udpChannel, EndPoint);
             _transport.UDPChannel = udpChannel;
             _transport.Receive(message);
-            
+
+            _listening = 1;
             DtlsTransport dtlsServer = serverProtocol.Accept(server, _transport);
+            _listening = 0;
 
 
             _dtlsClient = dtlsServer;
@@ -160,18 +164,36 @@ namespace Com.AugustCellars.CoAP.TLS
         public void ReceiveData(Object sender, DataReceivedEventArgs e)
         {
             _transport.Receive(e.Data);
+            lock (_transport.Queue) {
+                if (_listening == 0) {
+                    new Thread(() => StartListen()).Start();
+                }
+            }
         }
+
+        private int _listening;
 
         void StartListen()
         {
+            if (System.Threading.Interlocked.CompareExchange(ref _listening, 1, 0) > 0) {
+                return;
+            }
+
             byte[] buf = new byte[2000];
-            while (_dtlsClient != null) {
+            while (true) {
                 int size = _dtlsClient.Receive(buf, 0, buf.Length, 1000);
-                if (size >= 0) {
-                    byte[] buf2 = new byte[size];
-                    Array.Copy(buf, buf2, size);
-                    FireDataReceived(buf2, _ipEndPoint);
+                if (size == -1) {
+                    lock (_transport.Queue) {
+                        if (_transport.Queue.Count == 0) {
+                            System.Threading.Interlocked.Exchange(ref _listening, 0);
+                            return;
+                        }
+                    }
                 }
+                byte[] buf2 = new byte[size];
+                Array.Copy(buf, buf2, size);
+                FireDataReceived(buf2, _ipEndPoint);
+
             }
         }
 
@@ -186,7 +208,7 @@ namespace Com.AugustCellars.CoAP.TLS
         class OurTransport : DatagramTransport
         {
             private UDPChannel _udpChannel;
-            private System.Net.EndPoint _ep;
+            private readonly System.Net.EndPoint _ep;
 
 
             public OurTransport(System.Net.EndPoint ep)
@@ -196,12 +218,12 @@ namespace Com.AugustCellars.CoAP.TLS
 
             public UDPChannel UDPChannel
             {
-                set { _udpChannel = value; }
+                set => _udpChannel = value;
             }
 
             public void Close()
             {
-                _udpChannel = null;
+//                _udpChannel = null;
                 Monitor.PulseAll(_receivingQueue);
             }
 
@@ -256,6 +278,11 @@ namespace Com.AugustCellars.CoAP.TLS
             }
 
             private readonly ConcurrentQueue<byte[]> _receivingQueue = new ConcurrentQueue<byte[]>();
+
+            public ConcurrentQueue<byte[]> Queue
+            {
+                get => _receivingQueue;
+            }
 
             public void Receive(byte[] buf)
             {

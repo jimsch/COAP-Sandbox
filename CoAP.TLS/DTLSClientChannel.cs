@@ -163,6 +163,7 @@ namespace Com.AugustCellars.CoAP.TLS
 
                     session = new DTLSSession(ipEndPoint, DataReceived, _userKey);
                     AddSession(session);
+                    
                     session.Connect(_udpChannel);
                 }
 
@@ -192,6 +193,9 @@ namespace Com.AugustCellars.CoAP.TLS
             }
         }
 
+        /// <summary>
+        /// Keep track of all of the sessions that have been setup on this channel.
+        /// </summary>
         private readonly List<DTLSSession> _sessionList = new List<DTLSSession>();
 
         private void AddSession(DTLSSession session)

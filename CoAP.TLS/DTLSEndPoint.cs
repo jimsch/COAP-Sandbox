@@ -51,7 +51,7 @@ namespace Com.AugustCellars.CoAP.TLS
             Stack.Remove(Stack.Get("Reliability"));
             MessageEncoder = UdpCoapMesageEncoder;
             MessageDecoder = UdpCoapMessageDecoder;
-            _endpointSchema = "coaps";
+            EndpointSchema = "coaps";
         }
 
         static IMessageDecoder UdpCoapMessageDecoder(byte[] data)
