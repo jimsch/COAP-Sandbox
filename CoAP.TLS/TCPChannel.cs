@@ -170,10 +170,9 @@ namespace Com.AugustCellars.CoAP.TLS
             try {
                 while (true) {
                     // Program blocks on Accept() until a client connects
+
                     TcpClient soTcp = _listener.AcceptTcpClient();
-                  
-                    
-                    
+                                     
                     TcpSession session = new TcpSession(soTcp);
 
                     new Thread(() => StreamListener(session)).Start();
@@ -185,6 +184,11 @@ namespace Com.AugustCellars.CoAP.TLS
             catch (Exception) {
                 ;
             }
+
+        }
+
+        private void NewTcpClient(TcpClient soTcp)
+        {
 
         }
 

@@ -47,14 +47,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\COSE\COSE-csharp\COSE\COSE.dev.csproj">
-      <Project>{d02f476f-bc2c-4d01-bede-eb8e79dd050e}</Project>
-      <Name>COSE.dev</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\CoAP-CSharp\CoAP.NET\coap.dev.csproj">
-      <Project>{45db1e45-4831-4e4a-bb1e-ae92eea182e3}</Project>
-      <Name>coap.dev</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\CoAP.TLS\CoAP.TLS.csproj">
       <Project>{54e16be8-39ab-458e-a0ac-6efc73013f4f}</Project>
       <Name>CoAP.TLS</Name>
