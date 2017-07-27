@@ -31,6 +31,7 @@ namespace ikea
             // userKey.Add(CoseKeyKeys.KeyIdentifier, CBORObject.FromObject(Encoding.UTF8.GetBytes("password")));
 
 
+            userKey.Add(CoseKeyParameterKeys.Octet_k, CBORObject.FromObject(Encoding.UTF8.GetBytes("aeLxA2QudtntATrJ")));
 
             CoapClient client = new CoapClient(new Uri($"coaps://{Server}/.well-known/core"));
             
@@ -62,7 +63,7 @@ namespace ikea
 
                 client.UriPath = node.Uri;
 
-                if (node.Attributes.Observable) {
+                if (false && node.Attributes.Observable) {
                     Console.WriteLine("Observe it");
                     CoapObserveRelation relation1 = client.Observe(r => { EventIn(node.Uri, r); });
                 }
