@@ -9,11 +9,11 @@ using Com.AugustCellars.CoAP.Codec;
 
 namespace Com.AugustCellars.CoAP.TLS
 {
-    class TLSMessageDecoder : Spec.MessageDecoder18
+    class TCPMessageDecoder : Spec.MessageDecoder18
     {
         private Int32 _itemLength;
 
-        public TLSMessageDecoder(Byte[] data) : base(data)
+        public TCPMessageDecoder(Byte[] data) : base(data)
         {
             
         }

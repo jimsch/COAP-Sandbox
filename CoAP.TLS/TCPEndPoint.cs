@@ -32,7 +32,19 @@ namespace Com.AugustCellars.CoAP.TLS
 
         /// <inheritdoc/>
         public TcpEndPoint(System.Net.EndPoint localEP) : this(localEP, CoapConfig.Default)
+
+
+
+        static IMessageDecoder TlsCoapMessageDecoder(byte[] data)
         {
+            return new TCPMessageDecoder(data);
+        }
+
+        static IMessageEncoder TlsCoapMesageEncoder()
+        {
+            return new TLSMessageEncoder();
+        }
+ {
         }
 
         /// <inheritdoc/>
@@ -50,17 +62,6 @@ namespace Com.AugustCellars.CoAP.TLS
             Stack.Remove(Stack.Get("Reliability"));
             MessageEncoder = TlsCoapMesageEncoder;
             MessageDecoder = TlsCoapMessageDecoder;
-        }
-
-
-        static IMessageDecoder TlsCoapMessageDecoder(byte[] data)
-        {
-            return new TLSMessageDecoder(data);
-        }
-
-        static IMessageEncoder TlsCoapMesageEncoder()
-        {
-            return new TLSMessageEncoder();
         }
     }
 }

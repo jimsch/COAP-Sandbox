@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.15
+VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoAP.Server.NET45", "CoAP.Example\CoAP.Server\CoAP.Server.NET45.csproj", "{05CC2E5E-B663-4560-844C-C8E52ED1C9D1}"
 EndProject
@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoAP.TLS", "CoAP.TLS\CoAP.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoAP.TLS.Test", "CoAP.TLS.Test\CoAP.TLS.Test.csproj", "{39ED5B69-5169-46AF-9714-F9BFCFE9AA98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoAP.NET45", "..\coap-csharp\CoAP.NET\CoAP.NET45.csproj", "{1B2B7A4B-4C2F-407F-9585-F837C63B34AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoAP.NET45", "..\coap-csharp\CoAP.NET\CoAP.NET45.csproj", "{45DB1E45-4831-4E4A-BB1E-AE92EEA182E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,14 +44,17 @@ Global
 		{39ED5B69-5169-46AF-9714-F9BFCFE9AA98}.Deploy|Any CPU.Build.0 = Debug|Any CPU
 		{39ED5B69-5169-46AF-9714-F9BFCFE9AA98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39ED5B69-5169-46AF-9714-F9BFCFE9AA98}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1B2B7A4B-4C2F-407F-9585-F837C63B34AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1B2B7A4B-4C2F-407F-9585-F837C63B34AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1B2B7A4B-4C2F-407F-9585-F837C63B34AA}.Deploy|Any CPU.ActiveCfg = Deploy|Any CPU
-		{1B2B7A4B-4C2F-407F-9585-F837C63B34AA}.Deploy|Any CPU.Build.0 = Deploy|Any CPU
-		{1B2B7A4B-4C2F-407F-9585-F837C63B34AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1B2B7A4B-4C2F-407F-9585-F837C63B34AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45DB1E45-4831-4E4A-BB1E-AE92EEA182E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45DB1E45-4831-4E4A-BB1E-AE92EEA182E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45DB1E45-4831-4E4A-BB1E-AE92EEA182E3}.Deploy|Any CPU.ActiveCfg = Deploy|Any CPU
+		{45DB1E45-4831-4E4A-BB1E-AE92EEA182E3}.Deploy|Any CPU.Build.0 = Deploy|Any CPU
+		{45DB1E45-4831-4E4A-BB1E-AE92EEA182E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45DB1E45-4831-4E4A-BB1E-AE92EEA182E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {396E9CF5-6F4A-4B34-957E-9D8C9C9DA619}
 	EndGlobalSection
 EndGlobal
