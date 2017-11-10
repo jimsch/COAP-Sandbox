@@ -4,6 +4,7 @@ using Com.AugustCellars.CoAP.Examples.Resources;
 using Com.AugustCellars.CoAP.Net;
 using Com.AugustCellars.CoAP.Server;
 using Com.AugustCellars.CoAP.TLS;
+using Com.AugustCellars.CoAP.DTLS;
 
 using Com.AugustCellars.COSE;
 using PeterO.Cbor;

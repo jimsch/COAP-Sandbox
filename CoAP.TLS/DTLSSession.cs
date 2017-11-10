@@ -15,13 +15,16 @@ using Org.BouncyCastle.Crypto.Tls;
 using Org.BouncyCastle.Security;
 using DataReceivedEventArgs = Com.AugustCellars.CoAP.Channel.DataReceivedEventArgs;
 
-namespace Com.AugustCellars.CoAP.TLS
+namespace Com.AugustCellars.CoAP.DTLS
 {
-    internal class DTLSSession
+    /// <summary>
+    /// Return information about a specific DTLS session
+    /// </summary>
+    public  class DTLSSession : ISecureSession
     {
         private DtlsClient _client;
         private readonly IPEndPoint _ipEndPoint;
-        private DtlsTransport _dtlsClient;
+        private DtlsTransport _dtlsSession;
         private readonly OurTransport _transport;
         private readonly OneKey _userKey;
         private readonly KeySet _userKeys;
@@ -29,7 +32,12 @@ namespace Com.AugustCellars.CoAP.TLS
 
         private readonly ConcurrentQueue<QueueItem> _queue = new ConcurrentQueue<QueueItem>();
         private readonly EventHandler<DataReceivedEventArgs> _dataReceived;
+        private readonly EventHandler<SessionEventArgs> _sessionEvents;
 
+        /// <summary>
+        /// List of event handlers to inform about session events.
+        /// </summary>
+        public event EventHandler<SessionEventArgs> SessionEvent;
 
         public DTLSSession(IPEndPoint ipEndPoint, EventHandler<DataReceivedEventArgs> dataReceived, OneKey userKey)
         {
@@ -48,24 +56,28 @@ namespace Com.AugustCellars.CoAP.TLS
             _transport = new OurTransport(ipEndPoint);
         }
 
-        /*
-        public DTLSSession(TcpClient client)
-        {
-            _client = client;
-            _ipEndPoint = (IPEndPoint) client.Client.RemoteEndPoint;
-        }
-        */
-
+        /// <summary>
+        /// Queue of items to be written on the session.
+        /// </summary>
         public ConcurrentQueue<QueueItem> Queue
         {
-            get { return _queue; }
+            get => _queue;
         }
 
+        /// <summary>
+        /// Endpoint to which the session is connected.
+        /// </summary>
         public IPEndPoint EndPoint
         {
-            get { return _ipEndPoint; }
+            get => _ipEndPoint;
         }
 
+
+        /// <summary>
+        /// Create the DTLS connection over a specific UDP channel.
+        /// We already know what address we are going to use
+        /// </summary>
+        /// <param name="udpChannel">UDP channel to use</param>
         public void Connect(UDPChannel udpChannel)
         {
             BasicTlsPskIdentity pskIdentity = null;
@@ -91,7 +103,7 @@ namespace Com.AugustCellars.CoAP.TLS
             _listening = 1;
             DtlsTransport dtlsClient = clientProtocol.Connect(_client, _transport);
             _listening = 0;
-            _dtlsClient = dtlsClient;
+            _dtlsSession = dtlsClient;
 
             //  We are now in the world of a connected system -
             //  We need to do the receive calls
@@ -99,31 +111,46 @@ namespace Com.AugustCellars.CoAP.TLS
             new Thread(() => StartListen()).Start();
         }
 
+        /// <summary>
+        /// Start up a session on the server side
+        /// </summary>
+        /// <param name="udpChannel">What channel are we on</param>
+        /// <param name="message">What was the last message we got?</param>
         public void Accept(UDPChannel udpChannel, byte[] message)
         {
             DtlsServerProtocol serverProtocol = new DtlsServerProtocol(new SecureRandom());
 
             TlsServer server = new DtlsServer(_serverKeys, _userKeys);
-  //          _transport = new OurTransport(udpChannel, EndPoint);
+
             _transport.UDPChannel = udpChannel;
             _transport.Receive(message);
+
+            //  Make sure we do not startup a listing thread as the correct call is always made
+            //  byt the DTLS accept protocol.
+
 
             _listening = 1;
             DtlsTransport dtlsServer = serverProtocol.Accept(server, _transport);
             _listening = 0;
 
-
-            _dtlsClient = dtlsServer;
+            _dtlsSession = dtlsServer;
 
             new Thread(() => StartListen()).Start();
-  
         }
 
+        /// <summary>
+        /// Stop the current session
+        /// </summary>
         public void Stop()
         {
-            if (_dtlsClient != null) {
-                _dtlsClient.Close();
-                _dtlsClient = null;
+            if (_dtlsSession != null) {
+                _dtlsSession.Close();
+                EventHandler<SessionEventArgs> h = SessionEvent;
+                if (h != null) {
+                    SessionEventArgs thisEvent = new SessionEventArgs(SessionEventArgs.SessionEvent.Closed, this);
+                    h(this, thisEvent);
+                }
+                _dtlsSession = null;
             }
             _client = null;
         }
@@ -132,6 +159,9 @@ namespace Com.AugustCellars.CoAP.TLS
         private Int32 _writing;
         private readonly Object _writeLock = new Object();
 
+        /// <summary>
+        /// If there is data in the write queue, push it out
+        /// </summary>
         public void WriteData()
         {
             if (_queue.Count == 0)
@@ -147,7 +177,7 @@ namespace Com.AugustCellars.CoAP.TLS
                 if (!_queue.TryDequeue(out q))
                     break;
 
-                _dtlsClient.Send(q.Data, 0, q.Data.Length);
+                _dtlsSession.Send(q.Data, 0, q.Data.Length);
 
                 q = null;
             }
@@ -157,10 +187,13 @@ namespace Com.AugustCellars.CoAP.TLS
                 if (_queue.Count > 0)
                     WriteData();
             }
-
-            
         }
 
+        /// <summary>
+        /// Event handler to deal with data coming from the UDP Channel
+        /// </summary>
+        /// <param name="sender">Event creator</param>
+        /// <param name="e">Event data</param>
         public void ReceiveData(Object sender, DataReceivedEventArgs e)
         {
             _transport.Receive(e.Data);
@@ -173,6 +206,10 @@ namespace Com.AugustCellars.CoAP.TLS
 
         private int _listening;
 
+        /// <summary>
+        /// Independent function that runs on a separate thread.
+        /// If there is nothing left in the queue, then the thread will exit.
+        /// </summary>
         void StartListen()
         {
             if (System.Threading.Interlocked.CompareExchange(ref _listening, 1, 0) > 0) {
@@ -181,7 +218,7 @@ namespace Com.AugustCellars.CoAP.TLS
 
             byte[] buf = new byte[2000];
             while (true) {
-                int size = _dtlsClient.Receive(buf, 0, buf.Length, 1000);
+                int size = _dtlsSession.Receive(buf, 0, buf.Length, 1000);
                 if (size == -1) {
                     lock (_transport.Queue) {
                         if (_transport.Queue.Count == 0) {
@@ -193,7 +230,6 @@ namespace Com.AugustCellars.CoAP.TLS
                 byte[] buf2 = new byte[size];
                 Array.Copy(buf, buf2, size);
                 FireDataReceived(buf2, _ipEndPoint);
-
             }
         }
 
@@ -201,7 +237,7 @@ namespace Com.AugustCellars.CoAP.TLS
         {
             EventHandler<DataReceivedEventArgs> h = _dataReceived;
             if (h != null) {
-                h(this, new DataReceivedEventArgs(data, ep));
+                h(this, new DataReceivedEventArgs(data, ep, this));
             }
         }
 

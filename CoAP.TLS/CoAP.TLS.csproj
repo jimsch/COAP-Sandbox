@@ -21,6 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -49,13 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DTLSChannel.cs" />
-    <Compile Include="DTLSClient.cs" />
-    <Compile Include="DTLSClientChannel.cs" />
-    <Compile Include="DTLSClientEndPoint.cs" />
-    <Compile Include="DTLSEndPoint.cs" />
-    <Compile Include="DtlsServer.cs" />
-    <Compile Include="DTLSSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueItem.cs" />
     <Compile Include="TCPSession.cs" />

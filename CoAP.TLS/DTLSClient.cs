@@ -74,6 +74,11 @@ namespace Com.AugustCellars.CoAP.TLS
                 case KeyExchangeAlgorithm.RSA_PSK:
                     return CreatePskKeyExchange(keyExchangeAlgorithm);
 
+                case KeyExchangeAlgorithm.ECDH_anon:
+                case KeyExchangeAlgorithm.ECDH_ECDSA:
+                case KeyExchangeAlgorithm.ECDH_RSA:
+                    return CreateECDHKeyExchange(keyExchangeAlgorithm);
+                
                 default:
                     /*
                         * Note: internal error here; the TlsProtocol implementation verifies that the
@@ -140,6 +145,11 @@ namespace Com.AugustCellars.CoAP.TLS
         {
             return new TlsPskKeyExchange(keyExchange, mSupportedSignatureAlgorithms, _mPskIdentity, null, null, mNamedCurves,
                 mClientECPointFormats, mServerECPointFormats);
+        }
+
+        protected override TlsKeyExchange CreateECDHKeyExchange(int keyExchange)        {
+            return new TlsECDHKeyExchange(keyExchange, mSupportedSignatureAlgorithms, mNamedCurves, mClientECPointFormats,
+                mServerECPointFormats);
         }
 
     }

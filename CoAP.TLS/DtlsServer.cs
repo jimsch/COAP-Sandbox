@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Org.BouncyCastle.Crypto.Tls;
 
 using Com.AugustCellars.COSE;
+using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Crypto;
 
 namespace Com.AugustCellars.CoAP.TLS
 {
@@ -27,7 +29,10 @@ namespace Com.AugustCellars.CoAP.TLS
 
         protected override int[] GetCipherSuites()
         {
-            return new int[] { CipherSuite.TLS_PSK_WITH_AES_128_CCM_8 };
+            return new int[] {
+                CipherSuite.TLS_PSK_WITH_AES_128_CCM_8,
+                CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8
+            };
 #if false
             return Arrays.Concatenate(base.GetCipherSuites(),
                 new int[] {
@@ -61,11 +66,23 @@ namespace Com.AugustCellars.CoAP.TLS
                 case KeyExchangeAlgorithm.RSA_PSK:
                     return GetRsaEncryptionCredentials();
 
+            case KeyExchangeAlgorithm.ECDHE_ECDSA:
+                return GetECDsaSignerCredentials();
+
                 default:
                     /* Note: internal error here; selected a key exchange we don't implement! */
                     throw new TlsFatalAlert(AlertDescription.internal_error);
             }
         }
+
+        protected override TlsSignerCredentials GetECDsaSignerCredentials()
+        {
+            AsymmetricKeyParameter privateKey = null;
+
+            return new DefaultTlsSignerCredentials(null, new Certificate(new X509CertificateStructure[0]), privateKey);
+            throw new TlsFatalAlert(AlertDescription.internal_error);
+        }
+
 
         public override TlsKeyExchange GetKeyExchange()
         {
@@ -78,7 +95,15 @@ namespace Com.AugustCellars.CoAP.TLS
                 case KeyExchangeAlgorithm.RSA_PSK:
                     return CreatePskKeyExchange(keyExchangeAlgorithm);
 
-                default:
+                case KeyExchangeAlgorithm.ECDH_anon:
+                case KeyExchangeAlgorithm.ECDH_ECDSA:
+                case KeyExchangeAlgorithm.ECDH_RSA:
+                    return CreateECDHKeyExchange(keyExchangeAlgorithm);
+
+            case KeyExchangeAlgorithm.ECDHE_ECDSA:
+                return CreateECDHKeyExchange(keyExchangeAlgorithm);
+
+            default:
                     /*
                         * Note: internal error here; the TlsProtocol implementation verifies that the
                         * server-selected cipher suite was in the list of client-offered cipher suites, so if
@@ -93,6 +118,20 @@ namespace Com.AugustCellars.CoAP.TLS
             return new TlsPskKeyExchange(keyExchange, mSupportedSignatureAlgorithms, null, mPskIdentityManager,
                 GetDHParameters(), mNamedCurves, mClientECPointFormats, mServerECPointFormats);
         }
+
+        protected override TlsKeyExchange CreateECDHKeyExchange(int keyExchange)
+        {
+            return new TlsECDHKeyExchange(keyExchange, mSupportedSignatureAlgorithms, mNamedCurves, mClientECPointFormats,
+                mServerECPointFormats);
+        }
+
+#if false
+        protected override TlsSignerCredentials GetECDsaSignerCredentials()
+        {
+            return TlsTestUtilities.LoadSignerCredentials(mContext, mSupportedSignatureAlgorithms, SignatureAlgorithm.rsa,
+                "x509-server.pem", "x509-server-key.pem");
+        }
+#endif
 
         private TlsPskIdentityManager mPskIdentityManager;
 

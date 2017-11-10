@@ -1,5 +1,6 @@
 ﻿using System;
 using Com.AugustCellars.CoAP.Server.Resources;
+using Com.AugustCellars.COSE;
 
 namespace Com.AugustCellars.CoAP.Examples.Resources
 {
@@ -18,6 +19,8 @@ namespace Com.AugustCellars.CoAP.Examples.Resources
         protected override void DoGet(CoapExchange exchange)
         {
             exchange.Respond("Hello World!");
+
+            OneKey who = exchange.Request.TlsContext.AuthenticationKey;
         }
     }
 }

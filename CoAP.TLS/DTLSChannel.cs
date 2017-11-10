@@ -15,6 +15,9 @@ using Com.AugustCellars.COSE;
 
 namespace Com.AugustCellars.CoAP.TLS
 {
+    /// <summary>
+    /// Channel implementation to support DTLS that 
+    /// </summary>
     public class DTLSChannel : IChannel
     {
         private System.Net.EndPoint _localEP;
@@ -37,6 +40,12 @@ namespace Com.AugustCellars.CoAP.TLS
             _serverKeys = serverKeys;
         }
 
+        /// <summary>
+        /// Create a DTLS channel with remote ad local keys.
+        /// </summary>
+        /// <param name="serverKeys"></param>
+        /// <param name="userKeys"></param>
+        /// <param name="ep"></param>
         public DTLSChannel(KeySet serverKeys, KeySet userKeys, System.Net.EndPoint ep)
         {
             _localEP = ep;
